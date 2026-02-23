@@ -1,0 +1,14 @@
+.btn-primary {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.hero {
+    text-align: center;
+    padding: 5rem 1rem;
+}

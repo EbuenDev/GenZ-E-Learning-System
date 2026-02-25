@@ -79,11 +79,37 @@ function nextQuestion() {
     }
 }
 
+// function finishQuiz() {
+//     const quizArea = document.getElementById("quizArea");
+//     const pass = score >= QUIZ_DATA.passingScore;
+
+//     const result = {
+//         quizId: QUIZ_DATA.id,
+//         score: score,
+//         total: QUIZ_DATA.questions.length,
+//         passed: pass,
+//         date: new Date().toISOString()
+//     };
+
+//     localStorage.setItem("quizResult", JSON.stringify(result));
+
+//     quizArea.innerHTML = `
+//         <div class="result-box">
+//             <h2>Quiz Completed</h2>
+//             <p>Score: ${score} / ${QUIZ_DATA.questions.length}</p>
+//             <p>Status: ${pass ? "PASSED" : "FAILED"}</p>
+//             <a href="progress.html" class="btn-primary">View Progress</a>
+//         </div>
+//     `;
+
+//     document.getElementById("nextBtn").style.display = "none";
+// }
+
+
 function finishQuiz() {
-    const quizArea = document.getElementById("quizArea");
     const pass = score >= QUIZ_DATA.passingScore;
 
-    const result = {
+    const attempt = {
         quizId: QUIZ_DATA.id,
         score: score,
         total: QUIZ_DATA.questions.length,
@@ -91,7 +117,9 @@ function finishQuiz() {
         date: new Date().toISOString()
     };
 
-    localStorage.setItem("quizResult", JSON.stringify(result));
+    saveStudentAttempt(attempt);
+
+    const quizArea = document.getElementById("quizArea");
 
     quizArea.innerHTML = `
         <div class="result-box">
@@ -103,4 +131,29 @@ function finishQuiz() {
     `;
 
     document.getElementById("nextBtn").style.display = "none";
+}
+
+function saveStudentAttempt(attempt) {
+
+    let systemData = JSON.parse(localStorage.getItem("eduSystemData")) || {
+        students: {}
+    };
+
+    let studentName = localStorage.getItem("currentStudent");
+
+    if (!studentName) {
+        studentName = prompt("Enter your name:");
+        localStorage.setItem("currentStudent", studentName);
+    }
+
+    if (!systemData.students[studentName]) {
+        systemData.students[studentName] = {
+            name: studentName,
+            quizAttempts: []
+        };
+    }
+
+    systemData.students[studentName].quizAttempts.push(attempt);
+
+    localStorage.setItem("eduSystemData", JSON.stringify(systemData));
 }
